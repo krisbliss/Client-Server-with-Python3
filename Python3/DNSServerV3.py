@@ -59,7 +59,7 @@ def dnsQuery(connectionSock, srcAddress):
 	lookup = gethostbyname(str(quest))
 
 	print ("DNS lookup: " + lookup) # your os sends out a dns query
-	cache.write(str(lookup))
+	cache.write(quest + ":" + str(lookup))
 	connectionSock.send(str(lookup))
 
 	cache.close()
