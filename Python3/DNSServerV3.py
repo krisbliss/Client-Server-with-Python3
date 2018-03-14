@@ -18,7 +18,7 @@ def main():
 	sSock.bind((host,port))
 
 	#Listen on the given socket maximum number of connections queued is 20
-	sSock.listen(20)
+	sSock.listen(1)
 
 	monitor = threading.Thread(target=monitorQuit, args=[])
 	monitor.start()
@@ -46,7 +46,7 @@ def dnsQuery(connectionSock, srcAddress):
 	#send the response back to the client
 	#Close the server socket.
 	print ("we fancy now") #able to make it to this step
-	quest = connectionSock.recv(1024)
+	quest = connectionSock.recv(1024).decode()
 	
 	if not quest:
 		print("busted") # data NOT recieved
@@ -56,11 +56,12 @@ def dnsQuery(connectionSock, srcAddress):
 	# variables for checking and creating cache file
 	cache = open("DNS_mapping.txt",'w+')
 	
-	lookup = gethostbyname(str(quest))
+	#lookup = gethostbyname(quest)
+	lookup = "Made it work boss"
 
 	print ("DNS lookup: " + lookup) # your os sends out a dns query
-	cache.write(quest + ":" + str(lookup))
-	connectionSock.send(str(lookup))
+	cache.write(quest + ":" + (lookup))
+	connectionSock.send(lookup.encode())
 
 	cache.close()
 	connectionSock.close()
