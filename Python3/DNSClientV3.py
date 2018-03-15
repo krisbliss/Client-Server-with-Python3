@@ -2,7 +2,7 @@
 # This program serves as the client of DNS query.
 # Written in Python v3.
 
-import sys
+import sys, pickle
 from socket import * 
 
 def main():
@@ -35,7 +35,9 @@ def main():
 			cSock.close()
 			sys.exit(1) # If input is "q" or "Q", quit the program.
 		cSock.send(st.encode()) # Otherwise, send the input to server.
-		data = cSock.recv(1024).decode() # Receive from server.#py3 specific
+		# data = cSock.recv(1024).decode() # Receive from server.#py3 specific
+		data = cSock.recv(1024) # Receive from server.#py3 specific
+		data = pickle.loads(data) #unpickels data that was received from the server
 		print("Received:", data) # Print out the result.
 
 if __name__ == '__main__':

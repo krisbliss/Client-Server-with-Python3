@@ -2,7 +2,7 @@
 # This program serves as the server of DNS query.
 # Written in Python v3.
 
-import sys, threading, os, random
+import sys, threading, os, random, pickle
 from socket import *
 #import socket
 #import socketserver
@@ -45,7 +45,7 @@ def dnsQuery(connectionSock, srcAddress):
 	#print response to the terminal
 	#send the response back to the client
 	#Close the server socket.
-	print ("we fancy now") #able to make it to this step
+
 	quest = connectionSock.recv(1024).decode()
 	
 	if not quest:
@@ -56,12 +56,12 @@ def dnsQuery(connectionSock, srcAddress):
 	# variables for checking and creating cache file
 	cache = open("DNS_mapping.txt",'w+')
 	
-	#lookup = gethostbyname(quest)
-	lookup = "Made it work boss"
+	lookup = gethostbyname_ex(quest) #tuple object of all host aliases and addresses from a DNS search
 
-	print ("DNS lookup: " + lookup) # your os sends out a dns query
-	cache.write(quest + ":" + (lookup))
-	connectionSock.send(lookup.encode())
+	print ("DNS lookup: " + str(lookup)) # your os sends out a dns query
+	cache.write(quest + ":" + str(lookup))
+	lookup = pickle.dumps(lookup) #serializes tuple for trasnport over TCP Socket connection
+	connectionSock.send(lookup) #since lookup is serialized, it is already onverted to binary format
 
 	cache.close()
 	connectionSock.close()
